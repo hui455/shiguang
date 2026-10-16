@@ -1,0 +1,11 @@
+.git
+.env
+.env.*
+!.env.example
+.venv
+__pycache__
+generated-images
+*.key
+*.pem
+*login.txt
+connector-url.txt

@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>拾光 · 图库</title>
+    <link rel="icon" href="/admin/assets/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/admin/assets/style.css" />
+    <script src="/admin/assets/app.js" defer></script>
+  </head>
+  <body>
+    <!-- Login -->
+    <main id="login-view" class="login" hidden>
+      <div class="login-brand">
+        <span class="mark mark-lg" aria-hidden="true"
+          ><svg viewBox="0 0 24 24"><path class="star" d="M12 2.5c.5 4.6 2.9 7 9.5 9.5-6.6 2.5-9 4.9-9.5 9.5-.5-4.6-2.9-7-9.5-9.5 6.6-2.5 9-4.9 9.5-9.5z" /><circle class="star" cx="19" cy="5" r="1.6" opacity=".75" /></svg
+        ></span>
+        <h1>拾光</h1>
+        <p>你的私人图片库</p>
+      </div>
+      <form id="login-form" class="login-card" method="post" action="/admin" autocomplete="on">
+        <!-- Lets browser password managers save and fill this login (there is only one account). -->
+        <input type="text" name="username" autocomplete="username" value="admin" class="visually-hidden" tabindex="-1" aria-hidden="true" readonly />
+        <label for="password">管理密码</label>
+        <div class="password-field">
+          <input id="password" name="password" type="password" autocomplete="current-password" required placeholder="输入管理密码" />
+          <button type="button" id="show-password" class="icon-btn" aria-label="显示密码" aria-pressed="false">
+            <svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z" /><circle cx="12" cy="12" r="3" /></svg>
+          </button>
+        </div>
+        <label class="remember">
+          <input id="remember" type="checkbox" checked />
+          <span>记住我（30 天内不用再登录）</span>
+        </label>
+        <p id="login-error" class="field-error" role="alert"></p>
+        <button type="submit" id="login-button" class="btn btn-primary btn-block">进入图库</button>
+      </form>
+      <p class="login-note">此密码与 Claude 连接地址、图片分享链接相互独立</p>
+      <p class="login-foot">分享链接只开放对应的图片 · 图片不会自动删除</p>
+    </main>
+
+    <!-- Library -->
+    <div id="library-view" hidden>
+      <header class="topbar">
+        <a class="brand" href="/admin">
+          <span class="mark" aria-hidden="true"
+            ><svg viewBox="0 0 24 24"><path class="star" d="M12 2.5c.5 4.6 2.9 7 9.5 9.5-6.6 2.5-9 4.9-9.5 9.5-.5-4.6-2.9-7-9.5-9.5 6.6-2.5 9-4.9 9.5-9.5z" /><circle class="star" cx="19" cy="5" r="1.6" opacity=".75" /></svg
+          ></span>
+          <span class="brand-name">拾光</span>
+        </a>
+        <label class="search" id="search-box">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" /><path d="M13.5 13.5L17 17" /></svg>
+          <input id="search" type="search" placeholder="搜索名称或提示词" aria-label="搜索图片名称或提示词" />
+        </label>
+        <div class="topbar-right">
+          <div class="storage" id="storage" title="">
+            <span id="storage-text">—</span>
+            <span class="storage-bar"><span id="storage-fill"></span></span>
+          </div>
+          <span class="divider" aria-hidden="true"></span>
+          <button id="search-toggle" class="icon-btn only-mobile" aria-label="搜索" aria-expanded="false">
+            <svg viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" /><path d="M13.5 13.5L17 17" /></svg>
+          </button>
+          <button id="logout" class="text-btn only-desktop">退出</button>
+          <button id="logout-mobile" class="icon-btn only-mobile" aria-label="退出登录">
+            <svg viewBox="0 0 20 20"><path d="M8 3.5H4.5v13H8" /><path d="M12 6.5l3.5 3.5-3.5 3.5" /><path d="M15.5 10H8" /></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="page">
+        <div class="titlebar">
+          <div class="title-block">
+            <div class="title-line">
+              <h1>图库</h1>
+              <span id="count" class="count"></span>
+            </div>
+            <span id="storage-mobile" class="storage-mobile only-mobile"></span>
+          </div>
+          <div class="title-actions">
+            <div class="segmented only-desktop" role="group" aria-label="排序" id="sort-group">
+              <button data-sort="newest" aria-pressed="true">最新</button>
+              <button data-sort="oldest" aria-pressed="false">最早</button>
+              <button data-sort="largest" aria-pressed="false">最大</button>
+            </div>
+            <label class="pill-select only-mobile">
+              <select id="sort-mobile" aria-label="排序">
+                <option value="newest">最新</option>
+                <option value="oldest">最早</option>
+                <option value="largest">最大</option>
+              </select>
+            </label>
+            <button id="refresh" class="icon-btn icon-btn-outline only-desktop" aria-label="刷新" title="刷新">
+              <svg viewBox="0 0 20 20"><path d="M16 10a6 6 0 1 1-1.8-4.3" /><path d="M16 3.5v3.6h-3.6" /></svg>
+            </button>
+            <button id="select-mode" class="btn btn-outline">选择</button>
+          </div>
+        </div>
+
+        <p id="warning" class="banner banner-warn" hidden>已触发容量保护，暂停生成新图片。可以先下载备份，再删除不需要的图片。</p>
+        <p id="busy" class="banner banner-info" hidden>正在生成图片，完成后点刷新就能看到新图。</p>
+
+        <div id="gallery" class="gallery" aria-live="polite"></div>
+
+        <div id="empty" class="empty" hidden>
+          <span class="mark mark-lg mark-soft" aria-hidden="true"
+            ><svg viewBox="0 0 24 24"><path class="star" d="M12 2.5c.5 4.6 2.9 7 9.5 9.5-6.6 2.5-9 4.9-9.5 9.5-.5-4.6-2.9-7-9.5-9.5 6.6-2.5 9-4.9 9.5-9.5z" /></svg
+          ></span>
+          <h2 id="empty-title">还没有图片</h2>
+          <p id="empty-description">在 Claude 里生成图片后，点刷新就能在这里看到。</p>
+        </div>
+
+        <nav class="pager" aria-label="分页">
+          <div class="per-page">
+            <span>每页显示</span>
+            <div class="segmented segmented-sm" role="group" aria-label="每页显示数量" id="per-page-group">
+              <button data-size="12">12</button>
+              <button data-size="24">24</button>
+              <button data-size="48">48</button>
+              <button data-size="96">96</button>
+            </div>
+            <span>张</span>
+          </div>
+          <div class="pages">
+            <button id="previous" class="icon-btn icon-btn-outline" aria-label="上一页">
+              <svg viewBox="0 0 20 20"><path d="M12 5l-5 5 5 5" /></svg>
+            </button>
+            <span id="page-numbers" class="page-numbers"></span>
+            <button id="next" class="icon-btn icon-btn-outline" aria-label="下一页">
+              <svg viewBox="0 0 20 20"><path d="M8 5l5 5-5 5" /></svg>
+            </button>
+            <span id="page-label" class="page-label">第 1 / 1 页</span>
+          </div>
+        </nav>
+      </main>
+
+      <div id="selection-bar" class="selection-bar" role="toolbar" aria-label="已选图片操作" hidden>
+        <strong>已选 <span id="selection-count">0</span> 张</strong>
+        <span class="divider" aria-hidden="true"></span>
+        <button id="select-all" class="text-btn">全选</button>
+        <button id="download-selected" class="text-btn">下载</button>
+        <button id="cancel-select" class="text-btn muted">取消</button>
+        <button id="delete-selected" class="btn btn-danger btn-pill" disabled>删除</button>
+      </div>
+    </div>
+
+    <div id="loading" class="loading">正在打开图库…</div>
+    <div id="toast" class="toast" role="status" hidden></div>
+
+    <!-- Preview -->
+    <dialog id="preview-dialog" class="preview" aria-label="图片预览">
+      <div class="preview-stage">
+        <img id="preview-image" alt="" />
+        <button id="preview-prev" class="icon-btn nav-btn nav-prev" aria-label="上一张">
+          <svg viewBox="0 0 20 20"><path d="M12 5l-5 5 5 5" /></svg>
+        </button>
+        <button id="preview-next" class="icon-btn nav-btn nav-next" aria-label="下一张">
+          <svg viewBox="0 0 20 20"><path d="M8 5l5 5-5 5" /></svg>
+        </button>
+      </div>
+      <aside id="preview-info" class="preview-info">
+        <div class="preview-close-row">
+          <button id="preview-back" class="text-btn small back" hidden>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12 5l-5 5 5 5" /></svg>
+            返回
+          </button>
+          <button id="close-preview" class="icon-btn" aria-label="关闭预览">
+            <svg viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15" /></svg>
+          </button>
+        </div>
+        <h2 id="preview-name"></h2>
+        <dl class="meta">
+          <dt>尺寸</dt><dd id="preview-dims">—</dd>
+          <dt>大小</dt><dd id="preview-size">—</dd>
+          <dt>格式</dt><dd id="preview-format">—</dd>
+          <dt>生成时间</dt><dd id="preview-time">—</dd>
+        </dl>
+        <section id="preview-record" class="record" hidden>
+          <div class="record-head">
+            <h3 id="record-title">提示词</h3>
+            <button id="copy-prompt" class="text-btn small">复制</button>
+          </div>
+          <p id="preview-prompt" class="prompt"></p>
+          <details id="revised-wrap" class="revised" hidden>
+            <summary>模型改写后的提示词</summary>
+            <p id="preview-revised" class="prompt"></p>
+          </details>
+          <dl id="record-params" class="meta meta-tight"></dl>
+          <div id="refs-wrap" hidden>
+            <h3>参考图</h3>
+            <div id="preview-refs" class="refs"></div>
+          </div>
+        </section>
+        <p id="preview-source" class="record-note" hidden></p>
+        <p id="preview-used-by" class="record-note" hidden></p>
+        <p id="preview-norecord" class="record-note" hidden>这张图生成时还没有记录功能，没有保存提示词。</p>
+        <div class="preview-actions">
+          <a id="preview-download" class="btn btn-primary btn-block" download>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3.5v9" /><path d="M6 9l4 4 4-4" /><path d="M4 16.5h12" /></svg>
+            下载原图
+          </a>
+          <button id="preview-copy" class="btn btn-outline btn-block">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 11.5l3-3" /><path d="M10.5 5.5l1-1a3.2 3.2 0 0 1 4.5 4.5l-1 1" /><path d="M9.5 14.5l-1 1a3.2 3.2 0 0 1-4.5-4.5l1-1" /></svg>
+            复制分享链接
+          </button>
+        </div>
+        <div class="preview-danger">
+          <button id="preview-delete" class="text-btn danger">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 5.5h13" /><path d="M8 5.5V4h4v1.5" /><path d="M5.5 5.5l.8 10.5h7.4l.8-10.5" /></svg>
+            删除这张图片
+          </button>
+        </div>
+        <div class="preview-foot">
+          <span id="preview-position"></span>
+          <span class="only-desktop">← → 切换 · Esc 关闭</span>
+        </div>
+      </aside>
+    </dialog>
+
+    <!-- Delete confirm -->
+    <dialog id="delete-dialog" class="confirm" aria-labelledby="delete-title">
+      <div class="confirm-head">
+        <span class="confirm-icon" aria-hidden="true"
+          ><svg viewBox="0 0 20 20"><path d="M3.5 5.5h13" /><path d="M8 5.5V4h4v1.5" /><path d="M5.5 5.5l.8 10.5h7.4l.8-10.5" /><path d="M8.5 9v4M11.5 9v4" /></svg
+        ></span>
+        <h2 id="delete-title">删除图片？</h2>
+      </div>
+      <div id="delete-thumbs" class="confirm-thumbs"></div>
+      <p id="delete-refs" class="confirm-warn" hidden></p>
+      <p class="confirm-text">删除后无法恢复，对应的分享链接也会失效。需要保留的话，请先下载原图。</p>
+      <div class="confirm-actions">
+        <button id="cancel-delete" class="btn btn-outline">取消</button>
+        <button id="confirm-delete" class="btn btn-danger">删除</button>
+      </div>
+    </dialog>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "image-gen-community",
+  "owner": {
+    "name": "OpenAI Image Gen Contributors"
+  },
+  "plugins": [
+    {
+      "name": "openai-image-gen",
+      "source": "./plugins/openai-image-gen",
+      "description": "Generate and edit images with your own choice of OpenAI image model."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "openai-image-gen",
+  "version": "0.1.0",
+  "description": "Generate and edit images using a configurable OpenAI-compatible image endpoint.",
+  "author": {
+    "name": "OpenAI Image Gen Contributors"
+  },
+  "keywords": [
+    "image",
+    "openai",
+    "gpt-image",
+    "design",
+    "ui-assets"
+  ],
+  "license": "MIT"
+}

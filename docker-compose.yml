@@ -1,0 +1,29 @@
+services:
+  image-gen:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - images:/data/images
+    # Already have Nginx / another reverse proxy? Expose locally and point it here:
+    ports:
+      - "127.0.0.1:8000:8000"
+
+  # Automatic HTTPS. Start with: docker compose --profile caddy up -d
+  # Needs ports 80/443 free and DOMAIN's DNS pointing at this server.
+  caddy:
+    image: caddy:2
+    profiles: ["caddy"]
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    command: caddy reverse-proxy --from ${DOMAIN:-localhost} --to image-gen:8000
+    volumes:
+      - caddy_data:/data
+    depends_on:
+      - image-gen
+
+volumes:
+  images:
+  caddy_data:
