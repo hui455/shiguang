@@ -1,13 +1,13 @@
 {
-  "name": "image-gen-community",
+  "name": "shiguang",
   "owner": {
-    "name": "OpenAI Image Gen Contributors"
+    "name": "Shiguang Contributors"
   },
   "plugins": [
     {
-      "name": "openai-image-gen",
+      "name": "shiguang",
       "source": "./plugins/openai-image-gen",
-      "description": "Generate and edit images with your own choice of OpenAI image model."
+      "description": "拾光：生成、编辑和管理图片，保存提示词与参考图。"
     }
   ]
 }

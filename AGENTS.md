@@ -23,8 +23,8 @@ Server requirements: outside mainland China (OpenAI blocks it), Docker + Docker 
 ### 1. Get the code
 
 ```bash
-git clone https://github.com/hui455/openai-image-gen-community.git
-cd openai-image-gen-community
+git clone https://github.com/hui455/shiguang.git
+cd shiguang
 ```
 
 The repo may be private; if clone fails with 404/auth errors, ask the user to authenticate git (`gh auth login`) on this server.

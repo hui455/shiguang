@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/assets/banner.svg" alt="OpenAI Image Gen — 生成、编辑、管理图片" width="100%"></p>
+<p align="center"><img src="docs/assets/banner.svg" alt="拾光 — 生成、编辑、管理图片" width="100%"></p>
 
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg"></a>
@@ -7,7 +7,7 @@
   <img alt="Self hosted" src="https://img.shields.io/badge/Deploy-Self--hosted-168A65.svg">
 </p>
 
-# OpenAI Image Gen
+# 拾光
 
 **让 Claude 帮你生成图片、参考图改图，并把提示词和作品一起保存。**
 
@@ -28,7 +28,7 @@
 ```mermaid
 flowchart LR
     A[你：描述想要的图片] --> B[Claude / MCP 客户端]
-    B --> C[OpenAI Image Gen]
+    B --> C[拾光]
     C --> D[你配置的图片 API]
     D --> C
     C --> E[图片 + 提示词 + 参数]
@@ -39,9 +39,24 @@ flowchart LR
 
 ## 图库体验
 
-![图库功能示意：图片网格、提示词、参数和参考图](docs/assets/gallery-overview.svg)
+以下截图来自本地实际运行的管理系统。图片和提示词是专门制作的演示数据，不含私人图库内容；演示图片由本地绘图程序生成，不用于展示 AI 模型的生成质量。
 
-*上图为重新绘制的功能示意，使用虚构内容，不是生产环境截图。实际管理界面为中文。*
+**桌面图库**
+
+![拾光桌面图库真实截图](docs/assets/gallery.png)
+
+**图片预览、提示词和参考图**
+
+![拾光图片预览真实截图](docs/assets/preview.png)
+
+<details>
+<summary>查看登录页与手机界面</summary>
+
+![拾光登录页真实截图](docs/assets/login.png)
+
+<img src="docs/assets/mobile.png" alt="拾光手机图库真实截图" width="320">
+
+</details>
 
 - **查看图片与记录**：原图预览、提示词复制、模型与尺寸等参数、参考图跳转和返回。
 - **快速定位**：按文件名或提示词搜索，按时间或体积排序，支持分页。
@@ -80,8 +95,8 @@ flowchart LR
 在 Claude Code 中安装：
 
 ```text
-/plugin marketplace add hui455/openai-image-gen-community
-/plugin install openai-image-gen@image-gen-community
+/plugin marketplace add hui455/shiguang
+/plugin install shiguang@shiguang
 ```
 
 重启 Claude Code，然后试着说：
@@ -97,8 +112,8 @@ flowchart LR
 ### 远程服务：部署到自己的服务器
 
 ```bash
-git clone https://github.com/hui455/openai-image-gen-community.git
-cd openai-image-gen-community
+git clone https://github.com/hui455/shiguang.git
+cd shiguang
 cp .env.example .env
 # 编辑 .env：填写 API Key、模型、MCP_SECRET、PUBLIC_BASE_URL 和 DOMAIN
 ```
@@ -148,11 +163,11 @@ https://YOUR_DOMAIN/YOUR_MCP_SECRET/mcp
 ```bash
 docker compose build
 for test in tests/test_*.py; do
-  docker run --rm -i --network none --entrypoint python openai-image-gen-community-image-gen - < "$test" || exit 1
+  docker run --rm -i --network none --entrypoint python shiguang-image-gen - < "$test" || exit 1
 done
 ```
 
-上述镜像名对应默认目录名 `openai-image-gen-community`；自定义 Compose 项目名时需调整镜像名。
+上述镜像名对应默认目录名 `shiguang`；自定义 Compose 项目名时需调整镜像名。
 
 ## 数据与费用
 
@@ -160,4 +175,4 @@ done
 
 ## License
 
-[MIT](LICENSE) © 2026 OpenAI Image Gen Contributors.
+[MIT](LICENSE) © 2026 Shiguang Contributors.

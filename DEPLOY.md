@@ -10,8 +10,8 @@
 ## 1. 拉代码，填配置
 
 ```bash
-git clone https://github.com/hui455/openai-image-gen-community.git
-cd openai-image-gen-community
+git clone https://github.com/hui455/shiguang.git
+cd shiguang
 cp .env.example .env
 openssl rand -hex 24      # 生成密钥，复制输出
 nano .env                 # 填 OPENAI_API_KEY、MCP_SECRET、PUBLIC_BASE_URL、DOMAIN

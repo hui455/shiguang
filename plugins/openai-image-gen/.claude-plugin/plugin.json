@@ -1,9 +1,9 @@
 {
-  "name": "openai-image-gen",
+  "name": "shiguang",
   "version": "0.1.0",
-  "description": "Generate and edit images using a configurable OpenAI-compatible image endpoint.",
+  "description": "拾光 — Generate, edit and organize images with prompt and reference records.",
   "author": {
-    "name": "OpenAI Image Gen Contributors"
+    "name": "Shiguang Contributors"
   },
   "keywords": [
     "image",
